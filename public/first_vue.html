@@ -3,6 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
     <title>Snippet App</title>
   </head>
@@ -10,6 +11,11 @@
   	<div id="app"> <!-- 説明 2.1 -->
       <p>{{ message }}</p> <!-- 説明 2.2 -->
       <p>{{ message2 }}</p>
+      <button v-on:click="changeMsg">Change</button> <!-- 説明 2.12 -->
+      <ul>
+        <li v-for="data in list">{{ data.title }}</li> <!-- 説明 2.19 -->
+      </ul>
+      <button v-on:click="listSnippet">listSnippet</button> <!-- 説明 2.20 -->
     </div>
 
     <script>
@@ -18,9 +24,34 @@
         data() { // 説明 2.5
           return {
             message: "Hello Vue!",
-            message2: 'Hoge'
+            message2: 'Hoge',
+            list: [{title:'title1'}, {title:'title2'}] // 説明 2.14
           };
+        },
+        mounted () {  // 説明 2.7
+          this.setMsg();  // 説明 2.8
+        },
+        methods: { // 説明 2.9
+          setMsg: function () { // 説明 2.10
+            this.message = 'Set Message'; // 説明 2.11
+          },
+          changeMsg: function() { // 説明 2.13
+            this.message = 'Changed Message'
+            axios.get('/snippets.json') // 説明 2.16
+            .then(response => ( // 説明 2.17
+                this.message2 = response.data[0]['title'] // 説明 2.18
+              )
+            );
+          },
+          listSnippet: function() {
+            axios.get('/snippets.json')
+              .then(response => (
+                this.list = response.data // 説明 2.21
+              )
+            );
+          }
         }
+
       });
     </script>
 
